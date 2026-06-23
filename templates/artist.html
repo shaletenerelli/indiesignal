@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>{{ artist_name }} — IndieSignal</title>
+</head>
+<body>
+    <h1>IndieSignal</h1>
+    <a href="/">Back to search</a>
+    <h2>{{ artist_name }}</h2>
+    <h3>Top Albums</h3>
+    {% if releases %}
+        {% for release in releases %}
+            <div>
+                <p><strong>{{ release.name }}</strong></p>
+                <p>Playcount: {{ release.playcount }}</p>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No albums found.</p>
+    {% endif %}
+</body>
+</html>

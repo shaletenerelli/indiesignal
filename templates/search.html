@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Results — IndieSignal</title>
+</head>
+<body>
+    <h1>IndieSignal</h1>
+    <a href="/">Back to search</a>
+    <h2>Results for "{{ query }}"</h2>
+    {% if artists %}
+        {% for artist in artists %}
+            <div>
+                <p><strong><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></strong></p>
+                <p>Listeners: {{ artist.listeners }}</p>
+                <p><a href="{{ artist.url }}">View on Last.fm</a></p>
+            </div>
+            <hr>
+        {% endfor %}
+    {% else %}
+        <p>No artists found.</p>
+    {% endif %}
+</body>
+</html>
