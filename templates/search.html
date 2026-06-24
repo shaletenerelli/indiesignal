@@ -2,19 +2,19 @@
 <html>
 <head>
     <title>Search Results — IndieSignal</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>IndieSignal</h1>
-    <a href="/">Back to search</a>
+    <a href="/" class="back-link">← Back to search</a>
     <h2>Results for "{{ query }}"</h2>
     {% if artists %}
         {% for artist in artists %}
-            <div>
-                <p><strong><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></strong></p>
+            <div class="artist-card">
+                <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
                 <p>Listeners: {{ artist.listeners }}</p>
                 <p><a href="{{ artist.url }}">View on Last.fm</a></p>
             </div>
-            <hr>
         {% endfor %}
     {% else %}
         <p>No artists found.</p>

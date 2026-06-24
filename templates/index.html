@@ -2,13 +2,16 @@
 <html>
 <head>
     <title>IndieSignal</title>
+    <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
     <h1>IndieSignal</h1>
-    <p>Discover emerging indie artists.</p>
-    <form action="/search" method="get">
-        <input type="text" name="q" placeholder="Search for an artist...">
-        <button type="submit">Search</button>
-    </form>
+    <h2>Discover emerging indie artists.</h2>
+    <div class="search-form">
+        <form action="/search" method="get">
+            <input type="text" name="q" placeholder="Search for an artist...">
+            <button type="submit">Search</button>
+        </form>
+    </div>
 </body>
 </html>
