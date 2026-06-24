@@ -123,7 +123,6 @@ def print_releases(releases):
         print("---")
 
 
-
 def fetch_releases(artist_name, limit=10):
     """
     Fetch top albums from Last.fm for a given artist name.
@@ -174,6 +173,32 @@ def fetch_similar_artists(artist_name, limit=5):
     similar = data.get("similarartists", {}).get("artist", [])
 
     return similar
+
+
+def fetch_artist_tags(artist_name, limit=5):
+    """
+    Fetch top tags from Last.fm for a given artist name.
+    """
+
+    params = {
+        "method": "artist.gettoptags",
+        "artist": artist_name,
+        "api_key": API_KEY,
+        "format": "json",
+        "limit": limit
+    }
+
+    response = requests.get(BASE_URL, params=params)
+
+    time.sleep(0.25)
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    tags = data.get("toptags", {}).get("tag", [])
+
+    return tags
 
 
 def save_releases(releases):

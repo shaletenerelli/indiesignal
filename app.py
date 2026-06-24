@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request
-from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists
+from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags
 
 app = Flask(__name__)
 
@@ -31,7 +31,8 @@ def artist(artist_name):
     releases = fetch_releases(artist_name, limit=10)
     save_releases(releases)
     similar = fetch_similar_artists(artist_name, limit=5)
-    return render_template("artist.html", artist_name=artist_name, releases=releases, similar=similar)
+    tags = fetch_artist_tags(artist_name, limit=5)
+    return render_template("artist.html", artist_name=artist_name, releases=releases, similar=similar, tags=tags)
 
 
 if __name__ == "__main__":

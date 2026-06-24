@@ -8,6 +8,13 @@
     <h1>IndieSignal</h1>
     <a href="/" class="back-link">← Back to search</a>
     <h2>{{ artist_name }}</h2>
+    {% if tags %}
+        <p class="tags">
+            {% for tag in tags %}
+                <span class="tag">{{ tag.name }}</span>
+            {% endfor %}
+        </p>
+    {% endif %}
     <h3>Top Albums</h3>
     {% if releases %}
         {% for release in releases %}
@@ -31,3 +38,4 @@
         <p>No similar artists found.</p>
     {% endif %}
 </body>
+</html>

@@ -100,3 +100,19 @@ button:hover {
 hr {
     display: none;
 }
+
+.tags {
+    margin-bottom: 24px;
+}
+
+.tag {
+    display: inline-block;
+    background: #1a1a1a;
+    border: 1px solid #333;
+    color: #aaa;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-right: 6px;
+    margin-bottom: 6px;
+}
