@@ -150,6 +150,32 @@ def fetch_releases(artist_name, limit=10):
     return releases
 
 
+def fetch_similar_artists(artist_name, limit=5):
+    """
+    Fetch similar artists from Last.fm for a given artist name.
+    """
+
+    params = {
+        "method": "artist.getsimilar",
+        "artist": artist_name,
+        "api_key": API_KEY,
+        "format": "json",
+        "limit": limit
+    }
+
+    response = requests.get(BASE_URL, params=params)
+
+    time.sleep(0.25)
+
+    response.raise_for_status()
+
+    data = response.json()
+
+    similar = data.get("similarartists", {}).get("artist", [])
+
+    return similar
+
+
 def save_releases(releases):
     """
     Save release dictionaries into the releases table.

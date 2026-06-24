@@ -19,5 +19,15 @@
     {% else %}
         <p>No albums found.</p>
     {% endif %}
+    <h3>Similar Artists</h3>
+    {% if similar %}
+        {% for artist in similar %}
+            <div class="artist-card">
+                <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
+                <p>Match: {{ artist.match }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No similar artists found.</p>
+    {% endif %}
 </body>
-</html>
