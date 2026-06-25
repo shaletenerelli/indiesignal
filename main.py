@@ -256,6 +256,7 @@ def fetch_artist_info(artist_name):
 def update_artist_listeners(artist_name, listeners):
     connection = sqlite3.connect(DB_PATH)
     cursor = connection.cursor()
+    cursor.execute("INSERT OR IGNORE INTO artists (name, listeners) VALUES (?, ?)", (artist_name, listeners))
     cursor.execute("UPDATE artists SET listeners = ? WHERE name = ?", (listeners, artist_name))
     connection.commit()
     connection.close()
