@@ -76,6 +76,13 @@ def toggle_favorite(artist_name):
     else:
         save_favorite(session_id, artist_name)
         status = "added"
+        try:
+            listeners = fetch_artist_info(artist_name)
+            update_artist_listeners(artist_name, listeners)
+            tags = fetch_artist_tags(artist_name, limit=9)
+            save_artist_tags(artist_name, tags)
+        except Exception:
+            pass
     if request.headers.get("X-Requested-With") == "XMLHttpRequest":
         return jsonify({"status": status})
     return redirect(url_for("artist", artist_name=artist_name))
