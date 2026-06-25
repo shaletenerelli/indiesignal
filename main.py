@@ -46,6 +46,12 @@ def create_database():
         release_date TEXT,
         release_type TEXT
     )""")
+    cursor.execute("""CREATE TABLE IF NOT EXISTS favorites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT NOT NULL,
+        artist_name TEXT NOT NULL,
+        UNIQUE(session_id, artist_name)
+    )""")
     cursor.execute("""CREATE TABLE IF NOT EXISTS artist_tags (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         artist_name TEXT NOT NULL,
