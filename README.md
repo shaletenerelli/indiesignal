@@ -1,5 +1,9 @@
 # IndieSignal
 
+**Live demo:** https://indiesignal.onrender.com
+
+> Note: the app may take up to 50 seconds to load on first visit due to free hosting sleep mode. Personalized recommendations appear after ~3 minutes as the database seeds on startup.
+
 A music discovery web app that identifies and ranks indie, folk, and singer-songwriter artists by popularity tier and genre similarity.
 
 ## What it does
