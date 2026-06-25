@@ -8,16 +8,44 @@
     <h1>IndieSignal</h1>
     <a href="/" class="back-link">← Back to search</a>
     <h2>My Favorites</h2>
-    {% if artists %}
-        {% for artist in artists %}
-            <div class="artist-card">
-                <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
-                <p><span class="tier-badge tier-{{ artist.tier.lower() }}">{{ artist.tier }}</span></p>
-                <p>{{ "{:,}".format(artist.listeners) }} listeners</p>
-            </div>
-        {% endfor %}
-    {% else %}
-        <p>No favorites yet. Heart an artist to save them here.</p>
-    {% endif %}
+    <div class="tab-bar">
+        <button class="tab-btn active" onclick="showTab('favorites')">♥ Favorites</button>
+        <button class="tab-btn" onclick="showTab('foryou')">✦ For You</button>
+    </div>
+    <div id="favorites-tab">
+        {% if artists %}
+            {% for artist in artists %}
+                <div class="artist-card">
+                    <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
+                    <p><span class="tier-badge tier-{{ artist.tier.lower() }}">{{ artist.tier }}</span></p>
+                    <p>{{ "{:,}".format(artist.listeners) }} listeners</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>No favorites yet. Heart an artist to save them here.</p>
+        {% endif %}
+    </div>
+    <div id="foryou-tab" style="display:none;">
+        {% if taste_recs %}
+            <p class="listeners">Based on your favorited artists</p>
+            {% for rec in taste_recs %}
+                <div class="artist-card">
+                    <p><span class="artist-name"><a href="/artist/{{ rec.name }}">{{ rec.name }}</a></span></p>
+                    <p>Match: {{ rec.score }}</p>
+                </div>
+            {% endfor %}
+        {% else %}
+            <p>Favorite more artists to get personalized recommendations.</p>
+        {% endif %}
+    </div>
+    <script>
+        function showTab(tab) {
+            document.getElementById('favorites-tab').style.display = tab === 'favorites' ? 'block' : 'none';
+            document.getElementById('foryou-tab').style.display = tab === 'foryou' ? 'block' : 'none';
+            var btns = document.querySelectorAll('.tab-btn');
+            btns.forEach(function(btn) { btn.classList.remove('active'); });
+            event.target.classList.add('active');
+        }
+    </script>
 </body>
 </html>

@@ -1,8 +1,8 @@
 import os
 import uuid
-from flask import Flask, render_template, request, session, redirect, url_for
+from flask import Flask, render_template, request, session, redirect, url_for, jsonify
 from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags, save_artist_tags, query_all_artist_tags, query_artist_listeners, get_discovery_tier, fetch_artist_info, update_artist_listeners, save_favorite, remove_favorite, is_favorite, query_favorites
-from recommender import get_recommendations
+from recommender import get_recommendations, get_taste_recommendations
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -67,8 +67,12 @@ def toggle_favorite(artist_name):
     session_id = session["session_id"]
     if is_favorite(session_id, artist_name):
         remove_favorite(session_id, artist_name)
+        status = "removed"
     else:
         save_favorite(session_id, artist_name)
+        status = "added"
+    if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+        return jsonify({"status": status})
     return redirect(url_for("artist", artist_name=artist_name))
 
 
@@ -87,7 +91,13 @@ def favorites():
             "listeners": listeners,
             "tier": tier
         })
-    return render_template("favorites.html", artists=artists)
+    artist_tags = query_all_artist_tags()
+    taste_recs = get_taste_recommendations(artist_names, artist_tags, top_n=10)
+    return render_template(
+        "favorites.html",
+        artists=artists,
+        taste_recs=taste_recs
+    )
 
 
 if __name__ == "__main__":
