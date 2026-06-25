@@ -1,7 +1,7 @@
 import os
 import uuid
 from flask import Flask, render_template, request, session, redirect, url_for, jsonify
-from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags, save_artist_tags, query_all_artist_tags, query_artist_listeners, get_discovery_tier, fetch_artist_info, update_artist_listeners, save_favorite, remove_favorite, is_favorite, query_favorites
+from main import create_database, search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags, save_artist_tags, query_all_artist_tags, query_artist_listeners, get_discovery_tier, fetch_artist_info, update_artist_listeners, save_favorite, remove_favorite, is_favorite, query_favorites
 from recommender import get_recommendations, get_taste_recommendations
 from dotenv import load_dotenv
 
@@ -9,6 +9,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
+create_database()
 
 
 @app.route("/")
