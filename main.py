@@ -2,9 +2,13 @@ import sqlite3
 import time
 from pathlib import Path
 import requests
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 BASE_URL = "https://ws.audioscrobbler.com/2.0/"
-API_KEY = "46d597257c3442f9e60d64a32e2146eb"
+API_KEY = os.getenv("LASTFM_API_KEY")
 DB_PATH = Path("data/indie_signal.db")
 
 def search_artists(query, limit=5):
@@ -227,6 +231,28 @@ def get_discovery_tier(listeners):
         return "Rising"
     else:
         return "Established"
+
+def fetch_artist_info(artist_name):
+    params = {
+        "method": "artist.getinfo",
+        "artist": artist_name,
+        "api_key": API_KEY,
+        "format": "json"
+    }
+    response = requests.get(BASE_URL, params=params)
+    time.sleep(0.25)
+    response.raise_for_status()
+    data = response.json()
+    artist = data.get("artist", {})
+    listeners = int(artist.get("stats", {}).get("listeners", 0))
+    return listeners
+
+def update_artist_listeners(artist_name, listeners):
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+    cursor.execute("UPDATE artists SET listeners = ? WHERE name = ?", (listeners, artist_name))
+    connection.commit()
+    connection.close()
 
 if __name__ == "__main__":
     create_database()
