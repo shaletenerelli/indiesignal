@@ -38,7 +38,7 @@ def search_artists(query, limit=5):
 
 def create_database():
     """
-    Create the database file and the artists and releases tables if they do not already exist.
+    Create the database file and the artists, releases, and artist_tags tables.
     """
 
     DB_PATH.parent.mkdir(parents=True, exist_ok=True)
@@ -64,6 +64,15 @@ def create_database():
             title TEXT NOT NULL,
             release_date TEXT,
             release_type TEXT
+        )
+    """)
+
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS artist_tags (
+            id INTEGER PRIMARY KEY AUTOINCREMENT,
+            artist_name TEXT NOT NULL,
+            tag TEXT NOT NULL,
+            UNIQUE(artist_name, tag)
         )
     """)
 
@@ -175,7 +184,7 @@ def fetch_similar_artists(artist_name, limit=5):
     return similar
 
 
-def fetch_artist_tags(artist_name, limit=5):
+def fetch_artist_tags(artist_name, limit=9):
     """
     Fetch top tags from Last.fm for a given artist name.
     """
@@ -199,6 +208,30 @@ def fetch_artist_tags(artist_name, limit=5):
     tags = data.get("toptags", {}).get("tag", [])
 
     return tags
+
+
+def save_artist_tags(artist_name, tags):
+    """
+    Save artist tags into the artist_tags table.
+    """
+
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+
+    for tag in tags:
+        cursor.execute("""
+            INSERT OR IGNORE INTO artist_tags (
+                artist_name,
+                tag
+            )
+            VALUES (?, ?)
+        """, (
+            artist_name,
+            tag.get("name")
+        ))
+
+    connection.commit()
+    connection.close()
 
 
 def save_releases(releases):
@@ -290,6 +323,49 @@ def query_releases(artist_musicbrainz_id):
         })
 
     return releases
+
+
+def query_artist_tags(artist_name):
+    """
+    Return all tags for a given artist from the database.
+    """
+
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT tag FROM artist_tags
+        WHERE artist_name = ?
+    """, (artist_name,))
+
+    rows = cursor.fetchall()
+    connection.close()
+
+    return [row[0] for row in rows]
+
+
+def query_all_artist_tags():
+    """
+    Return a dict mapping each artist name to a string of their tags.
+    """
+
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+
+    cursor.execute("""
+        SELECT artist_name, tag FROM artist_tags
+    """)
+
+    rows = cursor.fetchall()
+    connection.close()
+
+    artist_tags = {}
+    for artist_name, tag in rows:
+        if artist_name not in artist_tags:
+            artist_tags[artist_name] = []
+        artist_tags[artist_name].append(tag)
+
+    return {name: " ".join(tags) for name, tags in artist_tags.items()}
 
 
 if __name__ == "__main__":

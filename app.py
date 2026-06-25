@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request
-from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags
+from main import search_artists, save_artists, query_artists, fetch_releases, save_releases, query_releases, fetch_similar_artists, fetch_artist_tags, save_artist_tags, query_all_artist_tags
+from recommender import get_recommendations
 
 app = Flask(__name__)
 
@@ -31,8 +32,20 @@ def artist(artist_name):
     releases = fetch_releases(artist_name, limit=10)
     save_releases(releases)
     similar = fetch_similar_artists(artist_name, limit=5)
-    tags = fetch_artist_tags(artist_name, limit=5)
-    return render_template("artist.html", artist_name=artist_name, releases=releases, similar=similar, tags=tags)
+    tags = fetch_artist_tags(artist_name, limit=9)
+    save_artist_tags(artist_name, tags)
+
+    artist_tags = query_all_artist_tags()
+    recommendations = get_recommendations(artist_name, artist_tags, top_n=5)
+
+    return render_template(
+        "artist.html",
+        artist_name=artist_name,
+        releases=releases,
+        similar=similar,
+        tags=tags,
+        recommendations=recommendations
+    )
 
 
 if __name__ == "__main__":

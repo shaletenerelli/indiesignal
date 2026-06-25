@@ -37,5 +37,16 @@
     {% else %}
         <p>No similar artists found.</p>
     {% endif %}
+    <h3>IndieSignal Recommendations</h3>
+    {% if recommendations %}
+        {% for rec in recommendations %}
+            <div class="artist-card">
+                <p><span class="artist-name"><a href="/artist/{{ rec.name }}">{{ rec.name }}</a></span></p>
+                <p>Similarity score: {{ rec.score }}</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>Search for more artists to get recommendations.</p>
+    {% endif %}
 </body>
 </html>
