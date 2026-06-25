@@ -8,6 +8,8 @@
     <h1>IndieSignal</h1>
     <a href="/" class="back-link">← Back to search</a>
     <h2>{{ artist_name }}</h2>
+    <p class="tier-badge tier-{{ tier.lower() }}">{{ tier }}</p>
+    <p class="listeners">{{ "{:,}".format(listeners) }} listeners</p>
     {% if tags %}
         <p class="tags">
             {% for tag in tags %}
@@ -31,7 +33,7 @@
         {% for artist in similar %}
             <div class="artist-card">
                 <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
-                <p>Match: {{ artist.match }}</p>
+                <p>Match: {{ (artist.match | float * 100) | round | int }}%</p>
             </div>
         {% endfor %}
     {% else %}
