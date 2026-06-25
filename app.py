@@ -15,6 +15,18 @@ import os
 os.makedirs("data", exist_ok=True)
 create_database()
 
+import threading
+def run_seed():
+    try:
+        from seed import seed
+        seed()
+    except Exception as e:
+        print(f"Seed error: {e}")
+
+seed_thread = threading.Thread(target=run_seed)
+seed_thread.daemon = True
+seed_thread.start()
+
 
 @app.route("/")
 def index():
