@@ -7,9 +7,13 @@
 <body>
     <h1>IndieSignal</h1>
     <a href="/" class="back-link">← Back to search</a>
+    <a href="/favorites" class="back-link" style="margin-left: 16px;">♥ My Favorites</a>
     <h2>{{ artist_name }}</h2>
     <p class="tier-badge tier-{{ tier.lower() }}">{{ tier }}</p>
     <p class="listeners">{{ "{:,}".format(listeners) }} listeners</p>
+    <button class="heart-btn" id="fav-btn" onclick="toggleFavorite('{{ artist_name }}')">
+        {% if favorited %}♥ Unfavorite{% else %}♡ Favorite{% endif %}
+    </button>
     {% if tags %}
         <p class="tags">
             {% for tag in tags %}
@@ -50,5 +54,18 @@
     {% else %}
         <p>Search for more artists to get recommendations.</p>
     {% endif %}
+    <script>
+        var favorited = {{ 'true' if favorited else 'false' }};
+        function toggleFavorite(artistName) {
+            fetch('/favorite/' + encodeURIComponent(artistName), {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'}
+            }).then(function() {
+                favorited = !favorited;
+                var btn = document.getElementById('fav-btn');
+                btn.textContent = favorited ? '♥ Unfavorite' : '♡ Favorite';
+            });
+        }
+    </script>
 </body>
 </html>

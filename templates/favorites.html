@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>My Favorites — IndieSignal</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <h1>IndieSignal</h1>
+    <a href="/" class="back-link">← Back to search</a>
+    <h2>My Favorites</h2>
+    {% if artists %}
+        {% for artist in artists %}
+            <div class="artist-card">
+                <p><span class="artist-name"><a href="/artist/{{ artist.name }}">{{ artist.name }}</a></span></p>
+                <p><span class="tier-badge tier-{{ artist.tier.lower() }}">{{ artist.tier }}</span></p>
+                <p>{{ "{:,}".format(artist.listeners) }} listeners</p>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No favorites yet. Heart an artist to save them here.</p>
+    {% endif %}
+</body>
+</html>

@@ -290,3 +290,47 @@ def update_artist_listeners(artist_name, listeners):
     """, (listeners, artist_name))
     connection.commit()
     connection.close()
+
+
+def save_favorite(session_id, artist_name):
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""CREATE TABLE IF NOT EXISTS favorites (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        session_id TEXT NOT NULL,
+        artist_name TEXT NOT NULL,
+        UNIQUE(session_id, artist_name)
+    )""")
+    cursor.execute("""INSERT OR IGNORE INTO favorites (session_id, artist_name)
+        VALUES (?, ?)""", (session_id, artist_name))
+    connection.commit()
+    connection.close()
+
+
+def remove_favorite(session_id, artist_name):
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""DELETE FROM favorites
+        WHERE session_id = ? AND artist_name = ?""", (session_id, artist_name))
+    connection.commit()
+    connection.close()
+
+
+def is_favorite(session_id, artist_name):
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""SELECT 1 FROM favorites
+        WHERE session_id = ? AND artist_name = ?""", (session_id, artist_name))
+    row = cursor.fetchone()
+    connection.close()
+    return row is not None
+
+
+def query_favorites(session_id):
+    connection = sqlite3.connect(DB_PATH)
+    cursor = connection.cursor()
+    cursor.execute("""SELECT artist_name FROM favorites
+        WHERE session_id = ?""", (session_id,))
+    rows = cursor.fetchall()
+    connection.close()
+    return [row[0] for row in rows]
