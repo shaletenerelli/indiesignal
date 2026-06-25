@@ -9,7 +9,7 @@ load_dotenv()
 
 app = Flask(__name__)
 app.secret_key = os.getenv("SECRET_KEY", "fallback_secret")
-create_database()
+import os; os.makedirs("data", exist_ok=True); create_database()
 
 
 @app.route("/")
